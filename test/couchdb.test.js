@@ -8,8 +8,7 @@ describe('couchdb connector', function() {
     db = getDataSource();
 
     User = db.define('User', {
-      _id: { type: Number, id: true },
-      name: { type: String, index: true },
+      name: { type: String, index: true},
       email: { type: String, index: true, unique: true },
       age: Number
     });
@@ -30,9 +29,9 @@ describe('couchdb connector', function() {
 
   describe('.create(cb)', function() {
     it('should handle correctly type Number for id field _id', function(done) {
-      User.create({_id: 3, content: 'test'}, function(err, res) {
+      User.create({name: 'myname', email: 'test@wiredcraft.com', age: 25}, function(err, res) {
         should.not.exist(err);
-        res._id.should.be.equal('3');
+        res.name.should.be.equal('myname');
         done();
       });
     });

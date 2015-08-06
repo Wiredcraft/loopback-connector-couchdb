@@ -7,7 +7,7 @@ var config = require('rc')('loopback', {
     couchdb: {
       host: '127.0.0.1',
       port: '5984',
-      dbName: 'test'
+      database: 'test'
     }
   }
 }).test.couchdb;
