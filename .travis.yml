@@ -1,0 +1,18 @@
+sudo: false
+language: node_js
+cache:
+  directories:
+    - node_modules
+notifications:
+  email: false
+node_js:
+  - "5"
+  - "4"
+services:
+  - couchdb
+install:
+  - npm install
+before_script:
+  - npm prune
+script:
+  - make test-coveralls
