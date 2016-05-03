@@ -1,1 +1,1 @@
-module.exports = require('./lib/couchdb.js');
+module.exports = require('./lib/couchdb');

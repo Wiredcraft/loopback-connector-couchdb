@@ -2,29 +2,48 @@
   "name": "loopback-connector-couchdb",
   "version": "0.0.0",
   "description": "LoopBack CouchDB Connector",
-  "main": "index.js",
-  "scripts": {
-    "test": "make test"
+  "author": {
+    "name": "Wiredcraft",
+    "email": "info@wiredcraft.com",
+    "url": "http://wiredcraft.com"
   },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "debug": "^2.2.0",
-    "loopback-connector": "^2.3.0",
-    "nano": "^6.1.5"
-  },
-  "devDependencies": {
-    "loopback-datasource-juggler": "^2.35.3",
-    "mocha": "^2.2.5",
-    "rc": "^1.1.0",
-    "should": "^7.0.2"
-  },
+  "contributors": [
+    "Makara Wang"
+  ],
+  "keywords": [
+    "LoopBack",
+    "CouchDB",
+    "nano",
+    "DataSource",
+    "Connector"
+  ],
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Wiredcraft/loopback-connector-couchdb.git"
+    "url": "https://github.com/Wiredcraft/loopback-connector-couchdb"
   },
-  "license": {
-    "name": "MIT",
-    "url": "https://github.com/Wiredcraft/loopback-connector-couchdb/blob/master/LICENSE"
+  "bugs": {
+    "url": "https://github.com/Wiredcraft/loopback-connector-couchdb/issues"
+  },
+  "homepage": "https://github.com/Wiredcraft/loopback-connector-couchdb",
+  "dependencies": {
+    "bluebird": "^3.3.5",
+    "debug": "^2.2.0",
+    "http-errors": "^1.4.0",
+    "loopback-connector": "^2.3.0",
+    "nano": "^6.2.0"
+  },
+  "devDependencies": {
+    "coveralls": "^2.11.9",
+    "istanbul": "^0.4.3",
+    "jscs": "^3.0.3",
+    "loopback-datasource-juggler": "^2.46.0",
+    "mocha": "^2.4.5",
+    "randexp": "^0.4.2",
+    "rc": "^1.0.0",
+    "should": "^8.3.1"
+  },
+  "scripts": {
+    "test": "make test"
   }
 }
