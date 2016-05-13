@@ -6,7 +6,7 @@ var init = require('./init');
 
 describe('CouchDB connector', function() {
 
-  var db;
+  var ds;
   var connector;
 
   it('can connect', function(done) {
@@ -19,7 +19,7 @@ describe('CouchDB connector', function() {
       res.should.be.Object();
       res.should.have.property('connected', true);
       res.should.have.property('connector').which.is.Object();
-      db = res;
+      ds = res;
       connector = res.connector;
       done();
     });
@@ -37,7 +37,7 @@ describe('CouchDB connector', function() {
   });
 
   it('can disconnect', function(done) {
-    db.disconnect(done);
+    ds.disconnect(done);
   });
 
   it('can disconnect', function(done) {

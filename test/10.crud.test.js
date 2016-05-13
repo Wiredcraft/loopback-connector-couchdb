@@ -7,7 +7,7 @@ var init = require('./init');
 
 describe('CouchDB CRUD', function() {
 
-  var db;
+  var ds;
   var connector;
   var Person;
   var persons;
@@ -19,9 +19,9 @@ describe('CouchDB CRUD', function() {
       if (err) {
         return done(err);
       }
-      db = res;
-      connector = db.connector;
-      Person = db.createModel('person', {
+      ds = res;
+      connector = ds.connector;
+      Person = ds.createModel('person', {
         id: {
           type: String,
           id: true
