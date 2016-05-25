@@ -248,6 +248,116 @@ describe('CouchDB CRUD', function() {
     // TODO: more errors
   });
 
+  describe('Replace by ID', function() {
+    before(function(done) {
+      connector._db.call('create', connector.settings.database, done);
+    });
+
+    after(function(done) {
+      connector._db.call('destroy', connector.settings.database, done);
+    });
+
+    before(function(done) {
+      Person.create(persons[0]).then(function() {
+        done();
+      }, done);
+    });
+
+    it('can replace a saved instance', function(done) {
+      Person.replaceById('0', {
+        name: 'Charlie II',
+        age: 25
+      }).then(function(res) {
+        res.should.be.Object();
+        res.should.have.property('id', '0');
+        res.should.have.property('name', 'Charlie II');
+        res.should.have.property('age', 25);
+        done();
+      }).catch(done);
+    });
+
+    it('can replace a saved instance', function(done) {
+      Person.replaceById('0', {
+        name: 'Charlie III'
+      }).then(function(res) {
+        res.should.be.Object();
+        res.should.have.property('id', '0');
+        res.should.have.property('name', 'Charlie III');
+        res.should.have.property('age', null);
+        done();
+      }).catch(done);
+    });
+
+    it('cannot replace an unsaved instance', function(done) {
+      Person.replaceById('lorem', {
+        name: 'Charlie II',
+        age: 25
+      }).then(function() {
+        done(new Error('expected an error'));
+      }, function(err) {
+        should.exist(err);
+        done();
+      });
+    });
+
+    // TODO: more errors
+  });
+
+  describe('Replace or create', function() {
+    before(function(done) {
+      connector._db.call('create', connector.settings.database, done);
+    });
+
+    after(function(done) {
+      connector._db.call('destroy', connector.settings.database, done);
+    });
+
+    before(function(done) {
+      Person.create(persons[0]).then(function() {
+        done();
+      }, done);
+    });
+
+    it('can replace an instance', function(done) {
+      Person.replaceOrCreate({
+        id: '0',
+        name: 'Charlie II',
+        age: 25
+      }).then(function(res) {
+        res.should.be.Object();
+        res.should.have.property('id', '0');
+        res.should.have.property('name', 'Charlie II');
+        res.should.have.property('age', 25);
+        done();
+      }).catch(done);
+    });
+
+    it('can replace an instance', function(done) {
+      Person.replaceOrCreate({
+        id: '0',
+        name: 'Charlie III'
+      }).then(function(res) {
+        res.should.be.Object();
+        res.should.have.property('id', '0');
+        res.should.have.property('name', 'Charlie III');
+        res.should.have.property('age', null);
+        done();
+      }).catch(done);
+    });
+
+    it('can create an instance', function(done) {
+      Person.replaceOrCreate(persons[1]).then(function(res) {
+        res.should.be.Object();
+        res.should.have.property('id', '1');
+        res.should.have.property('name', 'Mary');
+        res.should.have.property('age', 24);
+        done();
+      }).catch(done);
+    });
+
+    // TODO: more errors
+  });
+
   describe('Find multiple', function() {
     before(function(done) {
       connector._db.call('create', connector.settings.database, done);
