@@ -14,7 +14,16 @@ describe('CouchDB CRUD', function() {
 
   before(function(done) {
     init.getDataSource({
-      database: randexp(/^[a-z]{16}$/)
+      database: randexp(/^[a-z]{16}$/),
+      designDocs: {
+        find: {
+          views: {
+            byName: {
+              map: 'function(doc) { if (doc.name) emit(doc.name, null); }'
+            }
+          }
+        }
+      }
     }, function(err, res) {
       if (err) {
         return done(err);
@@ -58,20 +67,18 @@ describe('CouchDB CRUD', function() {
       connector._db.call('destroy', connector.settings.database, done);
     });
 
-    it('can create an instance with an id', function(done) {
-      Person.create(persons[0]).then(function(person) {
+    it('can create an instance with an id', function() {
+      return Person.create(persons[0]).then(function(person) {
         person.id.should.equal('0');
         person.name.should.equal('Charlie');
-        done();
-      }).catch(done);
+      });
     });
 
-    it('can create an instance without an id', function(done) {
-      Person.create(persons[3]).then(function(person) {
+    it('can create an instance without an id', function() {
+      return Person.create(persons[3]).then(function(person) {
         person.id.should.be.String();
         person.name.should.equal('Jason');
-        done();
-      }).catch(done);
+      });
     });
 
     it('cannot create with a duplicate id ', function(done) {
@@ -97,10 +104,8 @@ describe('CouchDB CRUD', function() {
       connector._db.call('destroy', connector.settings.database, done);
     });
 
-    before(function(done) {
-      Person.create(persons[0]).then(function() {
-        done();
-      }, done);
+    before(function() {
+      return Person.create(persons[0]);
     });
 
     before(function(done) {
@@ -110,31 +115,28 @@ describe('CouchDB CRUD', function() {
       }, done);
     });
 
-    it('can find a saved instance', function(done) {
-      Person.findById('0').then(function(person) {
+    it('can find a saved instance', function() {
+      return Person.findById('0').then(function(person) {
         person.should.be.Object();
         person.id.should.equal('0');
         person.name.should.equal('Charlie');
         person.age.should.equal(24);
-        done();
-      }).catch(done);
+      });
     });
 
-    it('can find a saved instance', function(done) {
-      Person.findById(id3).then(function(person) {
+    it('can find a saved instance', function() {
+      return Person.findById(id3).then(function(person) {
         person.should.be.Object();
         person.id.should.equal(id3);
         person.name.should.equal('Jason');
         person.age.should.equal(44);
-        done();
-      }).catch(done);
+      });
     });
 
-    it('cannot find an unsaved instance', function(done) {
-      Person.findById('1').then(function(res) {
+    it('cannot find an unsaved instance', function() {
+      return Person.findById('1').then(function(res) {
         should.not.exist(res);
-        done();
-      }).catch(done);
+      });
     });
 
     // TODO: more errors
@@ -149,26 +151,22 @@ describe('CouchDB CRUD', function() {
       connector._db.call('destroy', connector.settings.database, done);
     });
 
-    before(function(done) {
-      Person.create(persons[0]).then(function() {
-        done();
-      }, done);
+    before(function() {
+      return Person.create(persons[0]);
     });
 
-    it('can destroy a saved instance', function(done) {
+    it('can destroy a saved instance', function() {
       var person = Person(persons[0]);
-      person.remove().then(function(res) {
+      return person.remove().then(function(res) {
         res.should.be.Object().with.property('count', 1);
-        done();
-      }).catch(done);
+      });
     });
 
-    it('cannot destroy an unsaved instance', function(done) {
+    it('cannot destroy an unsaved instance', function() {
       var person = Person(persons[2]);
-      person.remove().then(function(res) {
+      return person.remove().then(function(res) {
         res.should.be.Object().with.property('count', 0);
-        done();
-      }).catch(done);
+      });
     });
 
     // TODO: more errors
@@ -183,24 +181,20 @@ describe('CouchDB CRUD', function() {
       connector._db.call('destroy', connector.settings.database, done);
     });
 
-    before(function(done) {
-      Person.create(persons[0]).then(function() {
-        done();
-      }, done);
+    before(function() {
+      return Person.create(persons[0]);
     });
 
-    it('can destroy a saved instance', function(done) {
-      Person.destroyById('0').then(function(res) {
+    it('can destroy a saved instance', function() {
+      return Person.destroyById('0').then(function(res) {
         res.should.be.Object().with.property('count', 1);
-        done();
-      }).catch(done);
+      });
     });
 
-    it('cannot destroy an unsaved instance', function(done) {
-      Person.destroyById('2').then(function(res) {
+    it('cannot destroy an unsaved instance', function() {
+      return Person.destroyById('2').then(function(res) {
         res.should.be.Object().with.property('count', 0);
-        done();
-      }).catch(done);
+      });
     });
 
     // TODO: more errors
@@ -215,34 +209,30 @@ describe('CouchDB CRUD', function() {
       connector._db.call('destroy', connector.settings.database, done);
     });
 
-    before(function(done) {
-      Person.create(persons[0]).then(function() {
-        done();
-      }, done);
+    before(function() {
+      return Person.create(persons[0]);
     });
 
-    it('can update an instance', function(done) {
-      Person.findById('0').then(function(person) {
+    it('can update an instance', function() {
+      return Person.findById('0').then(function(person) {
         person.name = 'Charlie II';
-        person.save().then(function(res) {
+        return person.save().then(function(res) {
           res.should.be.Object();
           res.should.have.property('id', '0');
           res.should.have.property('name', 'Charlie II');
           res.should.have.property('age', 24);
-          done();
         });
-      }).catch(done);
+      });
     });
 
-    it('can create an instance', function(done) {
+    it('can create an instance', function() {
       var person = Person(persons[1]);
-      person.save().then(function(res) {
+      return person.save().then(function(res) {
         res.should.be.Object();
         res.should.have.property('id', '1');
         res.should.have.property('name', 'Mary');
         res.should.have.property('age', 24);
-        done();
-      }).catch(done);
+      });
     });
 
     // TODO: more errors
@@ -257,14 +247,12 @@ describe('CouchDB CRUD', function() {
       connector._db.call('destroy', connector.settings.database, done);
     });
 
-    before(function(done) {
-      Person.create(persons[0]).then(function() {
-        done();
-      }, done);
+    before(function() {
+      return Person.create(persons[0]);
     });
 
-    it('can replace a saved instance', function(done) {
-      Person.replaceById('0', {
+    it('can replace a saved instance', function() {
+      return Person.replaceById('0', {
         name: 'Charlie II',
         age: 25
       }).then(function(res) {
@@ -272,20 +260,18 @@ describe('CouchDB CRUD', function() {
         res.should.have.property('id', '0');
         res.should.have.property('name', 'Charlie II');
         res.should.have.property('age', 25);
-        done();
-      }).catch(done);
+      });
     });
 
-    it('can replace a saved instance', function(done) {
-      Person.replaceById('0', {
+    it('can replace a saved instance', function() {
+      return Person.replaceById('0', {
         name: 'Charlie III'
       }).then(function(res) {
         res.should.be.Object();
         res.should.have.property('id', '0');
         res.should.have.property('name', 'Charlie III');
-        res.should.have.property('age', null);
-        done();
-      }).catch(done);
+        res.should.have.property('age', undefined);
+      });
     });
 
     it('cannot replace an unsaved instance', function(done) {
@@ -312,14 +298,12 @@ describe('CouchDB CRUD', function() {
       connector._db.call('destroy', connector.settings.database, done);
     });
 
-    before(function(done) {
-      Person.create(persons[0]).then(function() {
-        done();
-      }, done);
+    before(function() {
+      return Person.create(persons[0]);
     });
 
-    it('can replace an instance', function(done) {
-      Person.replaceOrCreate({
+    it('can replace an instance', function() {
+      return Person.replaceOrCreate({
         id: '0',
         name: 'Charlie II',
         age: 25
@@ -328,31 +312,28 @@ describe('CouchDB CRUD', function() {
         res.should.have.property('id', '0');
         res.should.have.property('name', 'Charlie II');
         res.should.have.property('age', 25);
-        done();
-      }).catch(done);
+      });
     });
 
-    it('can replace an instance', function(done) {
-      Person.replaceOrCreate({
+    it('can replace an instance', function() {
+      return Person.replaceOrCreate({
         id: '0',
         name: 'Charlie III'
       }).then(function(res) {
         res.should.be.Object();
         res.should.have.property('id', '0');
         res.should.have.property('name', 'Charlie III');
-        res.should.have.property('age', null);
-        done();
-      }).catch(done);
+        res.should.have.property('age', undefined);
+      });
     });
 
-    it('can create an instance', function(done) {
-      Person.replaceOrCreate(persons[1]).then(function(res) {
+    it('can create an instance', function() {
+      return Person.replaceOrCreate(persons[1]).then(function(res) {
         res.should.be.Object();
         res.should.have.property('id', '1');
         res.should.have.property('name', 'Mary');
         res.should.have.property('age', 24);
-        done();
-      }).catch(done);
+      });
     });
 
     // TODO: more errors
@@ -368,33 +349,35 @@ describe('CouchDB CRUD', function() {
     });
 
     before(function(done) {
-      Person.create(persons[0]).then(function() {
-        done();
-      }, done);
+      ds.autoupdate(done);
     });
 
-    before(function(done) {
-      Person.create(persons[1]).then(function() {
-        done();
-      }, done);
+    before(function() {
+      return Person.create(persons[0]);
     });
 
-    it('can find 2 instances', function(done) {
-      Person.findByIds(['0', '1']).then(function(res) {
+    before(function() {
+      return Person.create(persons[1]);
+    });
+
+    before(function() {
+      return Person.create(persons[2]);
+    });
+
+    it('can find 2 instances', function() {
+      return Person.findByIds(['0', '1']).then(function(res) {
         res.should.be.Array().with.length(2);
-        done();
-      }).catch(done);
+      });
     });
 
-    it('cannot find wrong instances', function(done) {
-      Person.findByIds(['0', 'lorem']).then(function(res) {
+    it('cannot find wrong instances', function() {
+      return Person.findByIds(['0', 'lorem']).then(function(res) {
         res.should.be.Array().with.length(1);
-        done();
-      }).catch(done);
+      });
     });
 
-    it('can find 2 instances', function(done) {
-      Person.find({
+    it('can find 2 instances', function() {
+      return Person.find({
         where: {
           id: {
             inq: ['0', '1']
@@ -402,12 +385,11 @@ describe('CouchDB CRUD', function() {
         }
       }).then(function(res) {
         res.should.be.Array().with.length(2);
-        done();
-      }).catch(done);
+      });
     });
 
-    it('cannot find wrong instances', function(done) {
-      Person.find({
+    it('cannot find wrong instances', function() {
+      return Person.find({
         where: {
           id: {
             inq: ['0', 'lorem']
@@ -415,9 +397,15 @@ describe('CouchDB CRUD', function() {
         }
       }).then(function(res) {
         res.should.be.Array().with.length(1);
-        done();
-      }).catch(done);
+      });
     });
+
+    it('can find all instances', function() {
+      return Person.find().then(function(res) {
+        res.should.be.Array().with.length(3);
+      });
+    });
+
   });
 
   describe('Destroy multiple', function() {
@@ -429,20 +417,16 @@ describe('CouchDB CRUD', function() {
       connector._db.call('destroy', connector.settings.database, done);
     });
 
-    before(function(done) {
-      Person.create(persons[0]).then(function() {
-        done();
-      }, done);
+    before(function() {
+      return Person.create(persons[0]);
     });
 
-    before(function(done) {
-      Person.create(persons[1]).then(function() {
-        done();
-      }, done);
+    before(function() {
+      return Person.create(persons[1]);
     });
 
-    it('can remove 2 instances', function(done) {
-      Person.remove({
+    it('can remove 2 instances', function() {
+      return Person.remove({
         id: {
           inq: ['0', '1']
         }
@@ -450,12 +434,11 @@ describe('CouchDB CRUD', function() {
         res.should.deepEqual({
           count: 2
         });
-        done();
-      }).catch(done);
+      });
     });
 
-    it('cannot remove them again', function(done) {
-      Person.remove({
+    it('cannot remove them again', function() {
+      return Person.remove({
         id: {
           inq: ['0', '1']
         }
@@ -463,8 +446,7 @@ describe('CouchDB CRUD', function() {
         res.should.deepEqual({
           count: 0
         });
-        done();
-      }).catch(done);
+      });
     });
   });
 
