@@ -70,36 +70,32 @@ describe('CouchDB operations', function() {
     });
   });
 
-  it('can use the DB', function(done) {
-    Person.create(persons[0]).then(function(person) {
+  it('can use the DB', function() {
+    return Person.create(persons[0]).then(function(person) {
       person.id.should.equal('0');
       person.name.should.equal('Charlie');
-      done();
-    }).catch(done);
+    });
   });
 
-  it('can use the DB', function(done) {
-    Person.create(persons[1]).then(function(person) {
+  it('can use the DB', function() {
+    return Person.create(persons[1]).then(function(person) {
       person.id.should.equal('1');
       person.name.should.equal('Mary');
-      done();
-    }).catch(done);
+    });
   });
 
-  it('can use the DB', function(done) {
-    Person.create(persons[3]).then(function(person) {
+  it('can use the DB', function() {
+    return Person.create(persons[3]).then(function(person) {
       person.id.should.be.String();
       person.name.should.equal('Jason');
-      done();
-    }).catch(done);
+    });
   });
 
-  it('can use the view', function(done) {
-    connector.connect().call('viewAsync', 'find', 'byName', { keys: ['Charlie'] }).then(function(res) {
+  it('can use the view', function() {
+    return connector.connect().call('viewAsync', 'find', 'byName', { keys: ['Charlie'] }).then(function(res) {
       res.should.be.Object();
       res.should.have.property('rows').which.is.Array().with.length(1);
-      done();
-    }).catch(done);
+    });
   });
 
   it('can do autoupdate again', function(done) {
@@ -111,31 +107,29 @@ describe('CouchDB operations', function() {
     });
   });
 
-  it('can use the view again', function(done) {
-    connector.connect().call('viewAsync', 'find', 'byName', { keys: ['Jason'] }).then(function(res) {
+  it('can use the view again', function() {
+    return connector.connect().call('viewAsync', 'find', 'byName', { keys: ['Jason'] }).then(function(res) {
       res.should.be.Object();
       res.should.have.property('rows').which.is.Array().with.length(1);
-      done();
-    }).catch(done);
+    });
   });
 
-  it('can have another view', function(done) {
-    connector.connect().call('insertAsync', {
+  it('can have another view', function() {
+    return connector.connect().call('insertAsync', {
       _id: '_design/group',
       views: {
         byAge: {
           map: 'function(doc) { if (doc.age) emit(doc.age, null); }'
         }
       }
-    }).asCallback(done);
+    });
   });
 
-  it('can use the other view', function(done) {
-    connector.connect().call('viewAsync', 'group', 'byAge', { keys: [24] }).then(function(res) {
+  it('can use the other view', function() {
+    return connector.connect().call('viewAsync', 'group', 'byAge', { keys: [24] }).then(function(res) {
       res.should.be.Object();
       res.should.have.property('rows').which.is.Array().with.length(2);
-      done();
-    }).catch(done);
+    });
   });
 
   it('can do autoupdate again', function(done) {
@@ -147,46 +141,43 @@ describe('CouchDB operations', function() {
     });
   });
 
-  it('can use the view', function(done) {
-    connector.connect().call('viewAsync', 'find', 'byName', { keys: ['Charlie'] }).then(function(res) {
+  it('can use the view', function() {
+    return connector.connect().call('viewAsync', 'find', 'byName', { keys: ['Charlie'] }).then(function(res) {
       res.should.be.Object();
       res.should.have.property('rows').which.is.Array().with.length(1);
-      done();
-    }).catch(done);
+    });
   });
 
-  it('can still use the other view', function(done) {
-    connector.connect().call('viewAsync', 'group', 'byAge', { keys: [24] }).then(function(res) {
+  it('can still use the other view', function() {
+    return connector.connect().call('viewAsync', 'group', 'byAge', { keys: [24] }).then(function(res) {
       res.should.be.Object();
       res.should.have.property('rows').which.is.Array().with.length(2);
-      done();
-    }).catch(done);
+    });
   });
 
-  it('can remove the design docs', function(done) {
+  it('can remove the design docs', function() {
     var connection = connector.connect();
     return connection.call('getAsync', '_design/find').then(function(data) {
       return connection.call('destroyAsync', data._id, data._rev);
-    }).asCallback(done);
+    });
   });
 
-  it('can have another view', function(done) {
-    connector.connect().call('insertAsync', {
+  it('can have another view', function() {
+    return connector.connect().call('insertAsync', {
       _id: '_design/find',
       views: {
         byAge: {
           map: 'function(doc) { if (doc.age) emit(doc.age, null); }'
         }
       }
-    }).asCallback(done);
+    });
   });
 
-  it('can use the other view', function(done) {
-    connector.connect().call('viewAsync', 'find', 'byAge', { keys: [24] }).then(function(res) {
+  it('can use the other view', function() {
+    return connector.connect().call('viewAsync', 'find', 'byAge', { keys: [24] }).then(function(res) {
       res.should.be.Object();
       res.should.have.property('rows').which.is.Array().with.length(2);
-      done();
-    }).catch(done);
+    });
   });
 
   it('can do autoupdate again', function(done) {
@@ -198,20 +189,18 @@ describe('CouchDB operations', function() {
     });
   });
 
-  it('can use the view', function(done) {
-    connector.connect().call('viewAsync', 'find', 'byName', { keys: ['Charlie'] }).then(function(res) {
+  it('can use the view', function() {
+    return connector.connect().call('viewAsync', 'find', 'byName', { keys: ['Charlie'] }).then(function(res) {
       res.should.be.Object();
       res.should.have.property('rows').which.is.Array().with.length(1);
-      done();
-    }).catch(done);
+    });
   });
 
-  it('can still use the other view', function(done) {
-    connector.connect().call('viewAsync', 'find', 'byAge', { keys: [24] }).then(function(res) {
+  it('can still use the other view', function() {
+    return connector.connect().call('viewAsync', 'find', 'byAge', { keys: [24] }).then(function(res) {
       res.should.be.Object();
       res.should.have.property('rows').which.is.Array().with.length(2);
-      done();
-    }).catch(done);
+    });
   });
 
   it('can do automigrate', function(done) {
@@ -223,28 +212,25 @@ describe('CouchDB operations', function() {
     });
   });
 
-  it('can use the DB', function(done) {
-    Person.create(persons[0]).then(function(person) {
+  it('can use the DB', function() {
+    return Person.create(persons[0]).then(function(person) {
       person.id.should.equal('0');
       person.name.should.equal('Charlie');
-      done();
-    }).catch(done);
+    });
   });
 
-  it('can use the DB', function(done) {
-    Person.create(persons[3]).then(function(person) {
+  it('can use the DB', function() {
+    return Person.create(persons[3]).then(function(person) {
       person.id.should.be.String();
       person.name.should.equal('Jason');
-      done();
-    }).catch(done);
+    });
   });
 
-  it('can use the view', function(done) {
-    connector.connect().call('viewAsync', 'find', 'byName', { keys: ['Charlie'] }).then(function(res) {
+  it('can use the view', function() {
+    return connector.connect().call('viewAsync', 'find', 'byName', { keys: ['Charlie'] }).then(function(res) {
       res.should.be.Object();
       res.should.have.property('rows').which.is.Array().with.length(1);
-      done();
-    }).catch(done);
+    });
   });
 
   it('can do automigrate before create', function(done) {
@@ -261,28 +247,25 @@ describe('CouchDB operations', function() {
     });
   });
 
-  it('can use the DB', function(done) {
-    Person.create(persons[0]).then(function(person) {
+  it('can use the DB', function() {
+    return Person.create(persons[0]).then(function(person) {
       person.id.should.equal('0');
       person.name.should.equal('Charlie');
-      done();
-    }).catch(done);
+    });
   });
 
-  it('can use the DB', function(done) {
-    Person.create(persons[3]).then(function(person) {
+  it('can use the DB', function() {
+    return Person.create(persons[3]).then(function(person) {
       person.id.should.be.String();
       person.name.should.equal('Jason');
-      done();
-    }).catch(done);
+    });
   });
 
-  it('can use the view', function(done) {
-    connector.connect().call('viewAsync', 'find', 'byName', { keys: ['Charlie'] }).then(function(res) {
+  it('can use the view', function() {
+    return connector.connect().call('viewAsync', 'find', 'byName', { keys: ['Charlie'] }).then(function(res) {
       res.should.be.Object();
       res.should.have.property('rows').which.is.Array().with.length(1);
-      done();
-    }).catch(done);
+    });
   });
 
 });
