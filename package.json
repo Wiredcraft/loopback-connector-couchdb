@@ -27,23 +27,22 @@
   },
   "homepage": "https://github.com/Wiredcraft/loopback-connector-couchdb",
   "dependencies": {
-    "bluebird": "^3.4.1",
-    "debug": "^2.2.0",
-    "http-errors": "^1.5.0",
-    "loopback-connector": "^2.4.0",
-    "loopback-connector-nosql": "^0.1.0",
+    "bluebird": "^3.4.7",
+    "debug": "^2.6.1",
+    "http-errors": "^1.6.1",
+    "loopback-connector": "^3.0.0",
+    "loopback-connector-nosql": "^0.2.0",
     "mixable-object": "^0.1.1",
     "nano": "^6.2.0"
   },
   "devDependencies": {
-    "coveralls": "^2.11.12",
-    "istanbul": "^0.4.4",
+    "coveralls": "^2.11.16",
+    "istanbul": "^0.4.5",
     "jscs": "^3.0.7",
-    "loopback-datasource-juggler": "^2.49.0",
-    "mocha": "^3.0.2",
-    "randexp": "^0.4.3",
-    "rc": "^1.0.0",
-    "should": "^11.1.0"
+    "loopback-datasource-juggler": "^3.2.0",
+    "mocha": "^3.2.0",
+    "randexp": "^0.4.4",
+    "should": "^11.2.0"
   },
   "scripts": {
     "test": "make test"
