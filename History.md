@@ -1,4 +1,10 @@
 
+0.3.0 / 2017-02-23
+==================
+
+  * Updated modules which fixed a problem with reconnect to DB.
+  * Updated readme.
+
 0.2.0 / 2016-08-17
 ==================
 
